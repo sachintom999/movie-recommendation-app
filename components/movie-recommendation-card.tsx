@@ -828,6 +828,7 @@ export default function MovieRecommendationCard() {
 
                             <div className="flex flex-wrap gap-2 mt-3">
                               <Button
+                                className="hover:bg-red-100"
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleToggleWatchlist(movie)}

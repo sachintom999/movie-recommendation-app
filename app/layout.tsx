@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"; // Import Toaster
+import { GlobalAlertDialog } from "@/components/GlobalAlertDialog";
+import { AlertDialogProvider } from "@/context/AlertDialogContext";
 
 export const metadata: Metadata = {
   title: "Moviemania - Movie Recommendations",
@@ -14,8 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster />
+        <AlertDialogProvider>
+          {children}
+          <Toaster />
+          <GlobalAlertDialog />
+        </AlertDialogProvider>
       </body>
     </html>
   );

@@ -42,6 +42,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAlertDialog } from "@/context/AlertDialogContext";
 
 // Sample movie database
 const movieDatabase = [
@@ -264,6 +265,7 @@ export default function MovieRecommendationCard() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("recommendations");
+  const { showDialog } = useAlertDialog();
 
   const itemsPerPage = 3;
 
@@ -355,16 +357,40 @@ export default function MovieRecommendationCard() {
 
   // UI Element 3: Add to Watchlist
   const handleToggleWatchlist = (movie: any) => {
+    let undo = false;
     const isInWatchlist = watchlist.some((item) => item.id === movie.id);
-
+  
     if (isInWatchlist) {
+      // Remove from watchlist
       setWatchlist(watchlist.filter((item) => item.id !== movie.id));
+  
       toast({
         title: "Removed from watchlist",
         description: `"${movie.title}" has been removed from your watchlist`,
+        action: (
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => {
+              undo = true;
+              setWatchlist((prev) => [...prev, movie]); // ✅ Restore the movie
+            }}
+          >
+            Undo
+          </Button>
+        ),
       });
+  
+      // If undo is not clicked within 5 seconds, confirm deletion
+      setTimeout(() => {
+        if (!undo) {
+          console.log(`"${movie.title}" permanently removed from watchlist.`);
+        }
+      }, 5000);
     } else {
+      // Add to watchlist
       setWatchlist([...watchlist, movie]);
+  
       toast({
         title: "Added to watchlist",
         description: `"${movie.title}" has been added to your watchlist`,
@@ -831,7 +857,15 @@ export default function MovieRecommendationCard() {
                                 className="hover:bg-red-100"
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handleToggleWatchlist(movie)}
+                                onClick={() =>
+                                  showDialog({
+                                    title: "Are you sure?",
+                                    description: "",
+                                    onConfirm: () => {
+                                      handleToggleWatchlist(movie)
+                                    },
+                                  })
+                                }
                               >
                                 <X className="mr-1 h-4 w-4" />
                                 Remove from Watchlist
@@ -840,7 +874,7 @@ export default function MovieRecommendationCard() {
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))}                      
                   </div>
                 ) : (
                   <div className="text-center py-8">

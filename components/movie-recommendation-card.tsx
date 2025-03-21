@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import {
   Film,
   Clock,
@@ -15,15 +15,33 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toast } from "@/components/ui/use-toast"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Sample movie database
 const movieDatabase = [
@@ -195,13 +213,31 @@ const movieDatabase = [
     cast: ["Daveigh Chase", "Suzanne Pleshette", "Miyu Irino"],
     imageUrl: "/placeholder.svg?height=150&width=250",
   },
-]
+];
 
 // Available genres
-const genres = ["Action", "Animation", "Comedy", "Crime", "Drama", "Fantasy", "Horror", "Musical", "Sci-Fi"]
+const genres = [
+  "Action",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Drama",
+  "Fantasy",
+  "Horror",
+  "Musical",
+  "Sci-Fi",
+];
 
 // Available languages
-const languages = ["English", "Spanish", "French", "German", "Italian", "Japanese", "Korean"]
+const languages = [
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Japanese",
+  "Korean",
+];
 
 // Year ranges
 const yearRanges = [
@@ -212,161 +248,176 @@ const yearRanges = [
   { label: "2000s", value: "2000s" },
   { label: "2010s", value: "2010s" },
   { label: "2020s", value: "2020s" },
-]
+];
 
 export default function MovieRecommendationCard() {
-  const [selectedGenre, setSelectedGenre] = useState<string>("")
-  const [availableTime, setAvailableTime] = useState<number>(120)
-  const [minRating, setMinRating] = useState<number>(7)
-  const [yearRange, setYearRange] = useState<string>("all")
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("English")
-  const [recommendations, setRecommendations] = useState<any[]>([])
-  const [watchlist, setWatchlist] = useState<any[]>([])
-  const [expandedMovieId, setExpandedMovieId] = useState<number | null>(null)
-  const [sortBy, setSortBy] = useState<string>("rating")
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false)
-  const [hasSearched, setHasSearched] = useState<boolean>(false)
-  const [activeTab, setActiveTab] = useState<string>("recommendations")
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [availableTime, setAvailableTime] = useState<number>(120);
+  const [minRating, setMinRating] = useState<number>(7);
+  const [yearRange, setYearRange] = useState<string>("all");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [watchlist, setWatchlist] = useState<any[]>([]);
+  const [expandedMovieId, setExpandedMovieId] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<string>("rating");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("recommendations");
 
-  const itemsPerPage = 3
+  const itemsPerPage = 3;
 
   // UI Element 7: Theme Toggle
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove("dark");
     }
-  }, [isDarkMode])
+  }, [isDarkMode]);
 
   // Filter movies based on all criteria
   const filterMovies = () => {
     const filteredMovies = movieDatabase.filter((movie) => {
       // Genre filter
-      const genreMatch = selectedGenre ? movie.genre === selectedGenre : true
+      const genreMatch = selectedGenre ? movie.genre === selectedGenre : true;
 
       // Duration filter
-      const durationMatch = movie.duration <= availableTime
+      const durationMatch = movie.duration <= availableTime;
 
       // Rating filter
-      const ratingMatch = movie.rating >= minRating
+      const ratingMatch = movie.rating >= minRating;
 
       // Year range filter
-      let yearMatch = true
+      let yearMatch = true;
       if (yearRange !== "all") {
         if (yearRange === "before1980") {
-          yearMatch = movie.year < 1980
+          yearMatch = movie.year < 1980;
         } else if (yearRange === "1980s") {
-          yearMatch = movie.year >= 1980 && movie.year < 1990
+          yearMatch = movie.year >= 1980 && movie.year < 1990;
         } else if (yearRange === "1990s") {
-          yearMatch = movie.year >= 1990 && movie.year < 2000
+          yearMatch = movie.year >= 1990 && movie.year < 2000;
         } else if (yearRange === "2000s") {
-          yearMatch = movie.year >= 2000 && movie.year < 2010
+          yearMatch = movie.year >= 2000 && movie.year < 2010;
         } else if (yearRange === "2010s") {
-          yearMatch = movie.year >= 2010 && movie.year < 2020
+          yearMatch = movie.year >= 2010 && movie.year < 2020;
         } else if (yearRange === "2020s") {
-          yearMatch = movie.year >= 2020
+          yearMatch = movie.year >= 2020;
         }
       }
 
       // Language filter
-      const languageMatch = movie.languages.includes(selectedLanguage)
+      const languageMatch = movie.languages.includes(selectedLanguage);
 
-      return genreMatch && durationMatch && ratingMatch && yearMatch && languageMatch
-    })
+      return (
+        genreMatch && durationMatch && ratingMatch && yearMatch && languageMatch
+      );
+    });
 
     // UI Element 6: Sort options
     if (sortBy === "rating") {
-      filteredMovies.sort((a, b) => b.rating - a.rating)
+      filteredMovies.sort((a, b) => b.rating - a.rating);
     } else if (sortBy === "year-new") {
-      filteredMovies.sort((a, b) => b.year - a.year)
+      filteredMovies.sort((a, b) => b.year - a.year);
     } else if (sortBy === "year-old") {
-      filteredMovies.sort((a, b) => a.year - b.year)
+      filteredMovies.sort((a, b) => a.year - b.year);
     } else if (sortBy === "duration-short") {
-      filteredMovies.sort((a, b) => a.duration - b.duration)
+      filteredMovies.sort((a, b) => a.duration - b.duration);
     } else if (sortBy === "duration-long") {
-      filteredMovies.sort((a, b) => b.duration - a.duration)
+      filteredMovies.sort((a, b) => b.duration - a.duration);
     }
 
-    return filteredMovies
-  }
+    return filteredMovies;
+  };
 
   // UI Element 1: Find Movies Button
   const handleFindMovies = () => {
-    const filteredMovies = filterMovies()
-    setRecommendations(filteredMovies)
-    setCurrentPage(1)
-    setHasSearched(true)
-    setActiveTab("recommendations")
-  }
+    const filteredMovies = filterMovies();
+    setRecommendations(filteredMovies);
+    setCurrentPage(1);
+    setHasSearched(true);
+    setActiveTab("recommendations");
+  };
 
   // UI Element 2: Clear Filters
   const handleClearFilters = () => {
-    setSelectedGenre("")
-    setAvailableTime(120)
-    setMinRating(7)
-    setYearRange("all")
-    setSelectedLanguage("English")
-    setSortBy("rating")
+    setSelectedGenre("");
+    setAvailableTime(120);
+    setMinRating(7);
+    setYearRange("all");
+    setSelectedLanguage("English");
+    setSortBy("rating");
     toast({
       title: "Filters cleared",
       description: "All filters have been reset to default values",
-    })
-  }
+    });
+  };
 
   // UI Element 3: Add to Watchlist
   const handleToggleWatchlist = (movie: any) => {
-    const isInWatchlist = watchlist.some((item) => item.id === movie.id)
+    const isInWatchlist = watchlist.some((item) => item.id === movie.id);
 
     if (isInWatchlist) {
-      setWatchlist(watchlist.filter((item) => item.id !== movie.id))
+      setWatchlist(watchlist.filter((item) => item.id !== movie.id));
       toast({
         title: "Removed from watchlist",
         description: `"${movie.title}" has been removed from your watchlist`,
-      })
+      });
     } else {
-      setWatchlist([...watchlist, movie])
+      setWatchlist([...watchlist, movie]);
       toast({
         title: "Added to watchlist",
         description: `"${movie.title}" has been added to your watchlist`,
-      })
+      });
     }
-  }
+  };
 
   // UI Element 4: Expand Movie Details
   const handleToggleExpand = (movieId: number) => {
     if (expandedMovieId === movieId) {
-      setExpandedMovieId(null)
+      setExpandedMovieId(null);
     } else {
-      setExpandedMovieId(movieId)
+      setExpandedMovieId(movieId);
     }
-  }
+  };
 
   // UI Element 5: Share Movie
   const handleShareMovie = (movie: any) => {
-    // In a real app, this would use the Web Share API or copy to clipboard
-    console.log(`349`)
-    toast({
-      title: "Shared successfully",
-      description: `Link to "${movie.title}" copied to clipboard`,
-    })
-  }
+    const movieLink = `https://moviemania.com/movies/${movie.id}`;
+
+    navigator.clipboard
+      .writeText(movieLink)
+      .then(() => {
+        toast({
+          title: "Shared successfully",
+          description: `Link to "${movie.title}" copied to clipboard`,
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Failed to copy",
+          description: "Something went wrong. Please try again.",
+        });
+      });
+  };
 
   // UI Element 8: Pagination
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
+    setCurrentPage(newPage);
+  };
 
   const formatTime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    return `${hours}h ${mins}m`
-  }
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}h ${mins}m`;
+  };
 
   // Calculate pagination
-  const totalPages = Math.ceil(recommendations.length / itemsPerPage)
-  const paginatedMovies = recommendations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  const totalPages = Math.ceil(recommendations.length / itemsPerPage);
+  const paginatedMovies = recommendations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -382,8 +433,17 @@ export default function MovieRecommendationCard() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={() => setIsDarkMode(!isDarkMode)} className="ml-auto">
-                    {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className="ml-auto"
+                  >
+                    {isDarkMode ? (
+                      <Sun className="h-5 w-5" />
+                    ) : (
+                      <Moon className="h-5 w-5" />
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -392,7 +452,9 @@ export default function MovieRecommendationCard() {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <CardDescription>Find the perfect movie based on your preferences</CardDescription>
+          <CardDescription>
+            Find the perfect movie based on your preferences
+          </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-6">
@@ -485,7 +547,10 @@ export default function MovieRecommendationCard() {
               {/* UI Element 11: Language Preference */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Language</label>
-                <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                <Select
+                  value={selectedLanguage}
+                  onValueChange={setSelectedLanguage}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select language" />
                   </SelectTrigger>
@@ -510,7 +575,9 @@ export default function MovieRecommendationCard() {
                     <SelectItem value="rating">Highest Rating</SelectItem>
                     <SelectItem value="year-new">Newest First</SelectItem>
                     <SelectItem value="year-old">Oldest First</SelectItem>
-                    <SelectItem value="duration-short">Shortest First</SelectItem>
+                    <SelectItem value="duration-short">
+                      Shortest First
+                    </SelectItem>
                     <SelectItem value="duration-long">Longest First</SelectItem>
                   </SelectContent>
                 </Select>
@@ -535,10 +602,18 @@ export default function MovieRecommendationCard() {
 
         {hasSearched && (
           <CardFooter className="flex-col border-t p-0">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="recommendations">Recommendations ({recommendations.length})</TabsTrigger>
-                <TabsTrigger value="watchlist">My Watchlist ({watchlist.length})</TabsTrigger>
+                <TabsTrigger value="recommendations">
+                  Recommendations ({recommendations.length})
+                </TabsTrigger>
+                <TabsTrigger value="watchlist">
+                  My Watchlist ({watchlist.length})
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="recommendations" className="p-4">
@@ -546,7 +621,10 @@ export default function MovieRecommendationCard() {
                   <>
                     <div className="space-y-4">
                       {paginatedMovies.map((movie) => (
-                        <div key={movie.id} className="border rounded-md p-3 bg-card">
+                        <div
+                          key={movie.id}
+                          className="border rounded-md p-3 bg-card"
+                        >
                           <div className="flex flex-col md:flex-row gap-4">
                             <div className="w-full md:w-1/4">
                               <img
@@ -557,7 +635,9 @@ export default function MovieRecommendationCard() {
                             </div>
                             <div className="w-full md:w-3/4">
                               <div className="flex justify-between items-start">
-                                <h4 className="font-semibold text-lg">{movie.title}</h4>
+                                <h4 className="font-semibold text-lg">
+                                  {movie.title}
+                                </h4>
                                 <div className="flex items-center gap-1 text-yellow-500">
                                   <Star className="h-4 w-4 fill-yellow-500" />
                                   <span>{movie.rating.toFixed(1)}</span>
@@ -566,41 +646,68 @@ export default function MovieRecommendationCard() {
 
                               <div className="flex flex-wrap gap-2 my-2">
                                 <Badge variant="outline">{movie.genre}</Badge>
-                                <Badge variant="secondary" className="flex items-center gap-1">
+                                <Badge
+                                  variant="secondary"
+                                  className="flex items-center gap-1"
+                                >
                                   <Clock className="h-3 w-3" />
                                   {formatTime(movie.duration)}
                                 </Badge>
-                                <Badge variant="secondary" className="flex items-center gap-1">
+                                <Badge
+                                  variant="secondary"
+                                  className="flex items-center gap-1"
+                                >
                                   <Calendar className="h-3 w-3" />
                                   {movie.year}
                                 </Badge>
                               </div>
 
-                              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{movie.description}</p>
+                              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                                {movie.description}
+                              </p>
 
                               {/* UI Element 4: Expand Movie Details */}
                               {expandedMovieId === movie.id && (
                                 <div className="mt-3 text-sm border-t pt-3">
                                   <p>
-                                    <span className="font-semibold">Director:</span> {movie.director}
+                                    <span className="font-semibold">
+                                      Director:
+                                    </span>{" "}
+                                    {movie.director}
                                   </p>
                                   <p>
-                                    <span className="font-semibold">Cast:</span> {movie.cast.join(", ")}
+                                    <span className="font-semibold">Cast:</span>{" "}
+                                    {movie.cast.join(", ")}
                                   </p>
                                   <p>
-                                    <span className="font-semibold">Languages:</span> {movie.languages.join(", ")}
+                                    <span className="font-semibold">
+                                      Languages:
+                                    </span>{" "}
+                                    {movie.languages.join(", ")}
                                   </p>
                                 </div>
                               )}
 
                               <div className="flex flex-wrap gap-2 mt-3">
-                                <Button variant="outline" size="sm" onClick={() => handleToggleExpand(movie.id)}>
-                                  {expandedMovieId === movie.id ? "Show Less" : "Show More"}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleToggleExpand(movie.id)}
+                                >
+                                  {expandedMovieId === movie.id
+                                    ? "Show Less"
+                                    : "Show More"}
                                 </Button>
 
                                 {/* UI Element 3: Add to Watchlist */}
-                                <Button variant="outline" size="sm" onClick={() => handleToggleWatchlist(movie)}>
-                                  {watchlist.some((item) => item.id === movie.id) ? (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleToggleWatchlist(movie)}
+                                >
+                                  {watchlist.some(
+                                    (item) => item.id === movie.id
+                                  ) ? (
                                     <>
                                       <BookmarkCheck className="mr-1 h-4 w-4" />
                                       In Watchlist
@@ -614,7 +721,11 @@ export default function MovieRecommendationCard() {
                                 </Button>
 
                                 {/* UI Element 5: Share Movie */}
-                                <Button variant="outline" size="sm" onClick={() => handleShareMovie(movie)}>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleShareMovie(movie)}
+                                >
                                   <Share2 className="mr-1 h-4 w-4" />
                                   Share
                                 </Button>
@@ -652,8 +763,14 @@ export default function MovieRecommendationCard() {
                   </>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-muted-foreground">No movies match your criteria</p>
-                    <Button variant="outline" className="mt-4" onClick={handleClearFilters}>
+                    <p className="text-muted-foreground">
+                      No movies match your criteria
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-4"
+                      onClick={handleClearFilters}
+                    >
                       Clear Filters
                     </Button>
                   </div>
@@ -664,7 +781,10 @@ export default function MovieRecommendationCard() {
                 {watchlist.length > 0 ? (
                   <div className="space-y-4">
                     {watchlist.map((movie) => (
-                      <div key={movie.id} className="border rounded-md p-3 bg-card">
+                      <div
+                        key={movie.id}
+                        className="border rounded-md p-3 bg-card"
+                      >
                         <div className="flex flex-col md:flex-row gap-4">
                           <div className="w-full md:w-1/4">
                             <img
@@ -675,7 +795,9 @@ export default function MovieRecommendationCard() {
                           </div>
                           <div className="w-full md:w-3/4">
                             <div className="flex justify-between items-start">
-                              <h4 className="font-semibold text-lg">{movie.title}</h4>
+                              <h4 className="font-semibold text-lg">
+                                {movie.title}
+                              </h4>
                               <div className="flex items-center gap-1 text-yellow-500">
                                 <Star className="h-4 w-4 fill-yellow-500" />
                                 <span>{movie.rating.toFixed(1)}</span>
@@ -684,20 +806,32 @@ export default function MovieRecommendationCard() {
 
                             <div className="flex flex-wrap gap-2 my-2">
                               <Badge variant="outline">{movie.genre}</Badge>
-                              <Badge variant="secondary" className="flex items-center gap-1">
+                              <Badge
+                                variant="secondary"
+                                className="flex items-center gap-1"
+                              >
                                 <Clock className="h-3 w-3" />
                                 {formatTime(movie.duration)}
                               </Badge>
-                              <Badge variant="secondary" className="flex items-center gap-1">
+                              <Badge
+                                variant="secondary"
+                                className="flex items-center gap-1"
+                              >
                                 <Calendar className="h-3 w-3" />
                                 {movie.year}
                               </Badge>
                             </div>
 
-                            <p className="text-sm text-muted-foreground mt-1">{movie.description}</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {movie.description}
+                            </p>
 
                             <div className="flex flex-wrap gap-2 mt-3">
-                              <Button variant="destructive" size="sm" onClick={() => handleToggleWatchlist(movie)}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleToggleWatchlist(movie)}
+                              >
                                 <X className="mr-1 h-4 w-4" />
                                 Remove from Watchlist
                               </Button>
@@ -709,9 +843,12 @@ export default function MovieRecommendationCard() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-muted-foreground">Your watchlist is empty</p>
+                    <p className="text-muted-foreground">
+                      Your watchlist is empty
+                    </p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Add movies to your watchlist to keep track of what you want to watch
+                      Add movies to your watchlist to keep track of what you
+                      want to watch
                     </p>
                   </div>
                 )}
@@ -721,6 +858,5 @@ export default function MovieRecommendationCard() {
         )}
       </Card>
     </div>
-  )
+  );
 }
-

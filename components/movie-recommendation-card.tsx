@@ -364,7 +364,7 @@ export default function MovieRecommendationCard() {
       // Remove from watchlist
       setWatchlist(watchlist.filter((item) => item.id !== movie.id));
   
-      toast({
+      const toastInstance = toast({
         title: "Removed from watchlist",
         description: `"${movie.title}" has been removed from your watchlist`,
         action: (
@@ -374,6 +374,7 @@ export default function MovieRecommendationCard() {
             onClick={() => {
               undo = true;
               setWatchlist((prev) => [...prev, movie]); // ✅ Restore the movie
+              toastInstance.dismiss();
             }}
           >
             Undo
@@ -384,7 +385,7 @@ export default function MovieRecommendationCard() {
       // If undo is not clicked within 5 seconds, confirm deletion
       setTimeout(() => {
         if (!undo) {
-          console.log(`"${movie.title}" permanently removed from watchlist.`);
+          
         }
       }, 5000);
     } else {
@@ -409,13 +410,13 @@ export default function MovieRecommendationCard() {
 
   // UI Element 5: Share Movie
   const handleShareMovie = (movie: any) => {
-    const movieLink = `https://moviemania.com/movies/${movie.id}`;
+    const movieLink = `https://imdb.com/movies/${movie.id}`;
 
     navigator.clipboard
       .writeText(movieLink)
       .then(() => {
         toast({
-          title: "Shared successfully",
+          title: "Share the movie",
           description: `Link to "${movie.title}" copied to clipboard`,
         });
       })
@@ -859,8 +860,8 @@ export default function MovieRecommendationCard() {
                                 size="sm"
                                 onClick={() =>
                                   showDialog({
-                                    title: "Are you sure?",
-                                    description: "",
+                                    title: "Remove movie from watchlist?",
+                                    description: "Are you sure you want to remove this movie from your watchlist?",
                                     onConfirm: () => {
                                       handleToggleWatchlist(movie)
                                     },

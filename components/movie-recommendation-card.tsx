@@ -633,8 +633,8 @@ export default function MovieRecommendationCard() {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="recommendations" >
+              <TabsList className="grid w-full grid-cols-2 rounded-none">
+                <TabsTrigger value="recommendations">
                   Recommendations ({recommendations.length})
                 </TabsTrigger>
                 <TabsTrigger value="watchlist">

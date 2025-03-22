@@ -359,11 +359,11 @@ export default function MovieRecommendationCard() {
   const handleToggleWatchlist = (movie: any) => {
     let undo = false;
     const isInWatchlist = watchlist.some((item) => item.id === movie.id);
-  
+
     if (isInWatchlist) {
       // Remove from watchlist
       setWatchlist(watchlist.filter((item) => item.id !== movie.id));
-  
+
       const toastInstance = toast({
         title: "Removed from watchlist",
         description: `"${movie.title}" has been removed from your watchlist`,
@@ -381,17 +381,16 @@ export default function MovieRecommendationCard() {
           </Button>
         ),
       });
-  
+
       // If undo is not clicked within 5 seconds, confirm deletion
       setTimeout(() => {
         if (!undo) {
-          
         }
       }, 5000);
     } else {
       // Add to watchlist
       setWatchlist([...watchlist, movie]);
-  
+
       toast({
         title: "Added to watchlist",
         description: `"${movie.title}" has been added to your watchlist`,
@@ -453,7 +452,7 @@ export default function MovieRecommendationCard() {
           <div className="flex justify-between items-center">
             <CardTitle className="flex items-center gap-2">
               <Film className="h-5 w-5" />
-              Movie Recommendations
+              <span className="text-xl md:text-2xl">Movie Recommendations</span>
             </CardTitle>
 
             {/* UI Element 7: Theme Toggle */}
@@ -635,7 +634,7 @@ export default function MovieRecommendationCard() {
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="recommendations">
+                <TabsTrigger value="recommendations" >
                   Recommendations ({recommendations.length})
                 </TabsTrigger>
                 <TabsTrigger value="watchlist">
@@ -861,9 +860,10 @@ export default function MovieRecommendationCard() {
                                 onClick={() =>
                                   showDialog({
                                     title: "Remove movie from watchlist?",
-                                    description: "Are you sure you want to remove this movie from your watchlist?",
+                                    description:
+                                      "Are you sure you want to remove this movie from your watchlist?",
                                     onConfirm: () => {
-                                      handleToggleWatchlist(movie)
+                                      handleToggleWatchlist(movie);
                                     },
                                   })
                                 }
@@ -875,7 +875,7 @@ export default function MovieRecommendationCard() {
                           </div>
                         </div>
                       </div>
-                    ))}                      
+                    ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
